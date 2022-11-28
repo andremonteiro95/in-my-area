@@ -18,13 +18,15 @@ function App() {
   return (
     <div className="App">
       <h1>Foursquare In Your Location</h1>
+
       {!position && !error && <p>Loading...</p>}
       {error && (<p>
-        Geolocation permission has been denied, please change the setting in your browser.
+        Geolocation permission has been denied, please change the setting in your browser
       </p>)}
       {position && (<p className="location">
         ({position.coords.latitude}, {position.coords.longitude})
       </p>)}
+
       <button disabled={!position} onClick={searchPlaces}>
         Search Location
       </button>
