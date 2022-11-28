@@ -1,32 +1,40 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
+import useGeolocation from './hooks/useGeolocation'
+import { getPlaces } from './api/foursquare'
+import { Place } from './components/Place'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { position, error } = useGeolocation()
+  const [places, setPlaces] = useState<unknown[]>()
+  
+  const searchPlaces = async () => {
+    if (!position) return
+
+    const { results } = await getPlaces(position.coords.latitude, position.coords.longitude)
+    setPlaces(results)
+  }
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Foursquare In Your Location</h1>
+      {!position && !error && <p>Loading...</p>}
+      {error && (<p>
+        Geolocation permission has been denied, please change the setting in your browser.
+      </p>)}
+      {position && (<p className="location">
+        ({position.coords.latitude}, {position.coords.longitude})
+      </p>)}
+      <button disabled={!position} onClick={searchPlaces}>
+        Search Location
+      </button>
+
+      <div className='grid-wrapper'>
+        <div className='grid'>
+          {places?.map(place => <Place place={place} />)}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
     </div>
   )
 }
