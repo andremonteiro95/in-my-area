@@ -14,7 +14,7 @@ export const Place = ({ place }: { place: any }) => {
       <div>
         {photo && (
           <img className='place-image' src={`${photo.prefix}${IMAGE_SIZE}${photo.suffix}`} />
-          )} 
+        )} 
       </div>
 
       <div className='place-name-container'>

@@ -1,8 +1,8 @@
-
 const BASE_URL = 'https://api.foursquare.com/v3/places/'
 
 function apiGet (url: URL | RequestInfo) {
   const headers = new Headers()
+  // The Foursquare API Key is provided through an environment variable: VITE_FOURSQUARE_API_KEY
   headers.append('Authorization', import.meta.env.VITE_FOURSQUARE_API_KEY)
   return fetch(url, { headers }).then(res => res.json())
 }
