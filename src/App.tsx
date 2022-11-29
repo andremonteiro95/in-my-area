@@ -7,12 +7,16 @@ import { Place } from './components/Place'
 function App() {
   const { position, error } = useGeolocation()
   const [places, setPlaces] = useState<unknown[]>()
+  const [isLoadingPlaces, setIsLoadingPlaces] = useState<boolean>(false)
   
   const searchPlaces = async () => {
     if (!position) return
 
+    setIsLoadingPlaces(true)
+
     const { results } = await getPlaces(position.coords.latitude, position.coords.longitude)
     setPlaces(results)
+    setIsLoadingPlaces(false)
   }
 
   return (
@@ -32,9 +36,10 @@ function App() {
       </button>
 
       <div className='grid-wrapper'>
-        <div className='grid'>
+        {isLoadingPlaces && <p>Searching places nearby...</p>}
+        {!isLoadingPlaces && (<div className='grid'>
           {places?.map(place => <Place place={place} />)}
-        </div>
+        </div>)}
       </div>
 
     </div>
